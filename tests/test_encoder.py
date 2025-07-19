@@ -3,8 +3,7 @@ import json
 import tempfile
 import uuid
 
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.asymmetric import ed25519
+from pyhap.crypto_adapter import serialization, ed25519
 
 from pyhap import encoder
 from pyhap.const import HAP_PERMISSIONS

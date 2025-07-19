@@ -1,5 +1,6 @@
 base36
-cryptography
+pycryptodome
+tlslite-ng
 orjson
 pyqrcode
 h11

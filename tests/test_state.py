@@ -2,7 +2,7 @@
 from unittest.mock import patch
 from uuid import UUID
 
-from cryptography.hazmat.primitives.asymmetric import ed25519
+from pyhap.crypto_adapter import ed25519
 import pytest
 
 from pyhap.const import CLIENT_PROP_PERMS, HAP_PERMISSIONS

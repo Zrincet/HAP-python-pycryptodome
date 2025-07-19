@@ -6,8 +6,7 @@ it can work properly after a restart.
 import json
 import uuid
 
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.asymmetric import ed25519
+from .crypto_adapter import serialization, ed25519
 
 from .const import CLIENT_PROP_PERMS
 from .state import State

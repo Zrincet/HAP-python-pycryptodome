@@ -5,9 +5,8 @@ from unittest.mock import patch
 from urllib.parse import urlparse
 from uuid import UUID
 
-from chacha20poly1305_reuseable import ChaCha20Poly1305Reusable as ChaCha20Poly1305
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.asymmetric import ed25519, x25519
+from pyhap.chacha20poly1305_adapter import ChaCha20Poly1305Reusable as ChaCha20Poly1305
+from pyhap.crypto_adapter import serialization, ed25519, x25519
 import pytest
 
 from pyhap import hap_handler, tlv

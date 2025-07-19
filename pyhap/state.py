@@ -2,7 +2,7 @@
 from typing import Dict, List, Optional, Union
 from uuid import UUID
 
-from cryptography.hazmat.primitives.asymmetric import ed25519
+from .crypto_adapter import ed25519
 
 from pyhap import util
 from pyhap.const import (

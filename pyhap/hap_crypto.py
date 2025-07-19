@@ -5,14 +5,10 @@ import struct
 from struct import Struct
 from typing import Iterable, List
 
-from chacha20poly1305_reuseable import ChaCha20Poly1305Reusable as ChaCha20Poly1305
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.hkdf import HKDF
+from .chacha20poly1305_adapter import ChaCha20Poly1305Reusable as ChaCha20Poly1305
+from .crypto_adapter import hap_hkdf, hashes
 
 logger = logging.getLogger(__name__)
-
-CRYPTO_BACKEND = default_backend()
 
 PACK_NONCE = partial(Struct("<LQ").pack, 0)
 PACK_LENGTH = Struct("H").pack
@@ -32,14 +28,8 @@ def pad_tls_nonce(nonce, total_len=HAP_CRYPTO.TLS_NONCE_LEN):
 
 def hap_hkdf(key, salt, info):
     """Just a shorthand."""
-    hkdf = HKDF(
-        algorithm=HAP_CRYPTO.HKDF_HASH,
-        length=HAP_CRYPTO.HKDF_KEYLEN,
-        salt=salt,
-        info=info,
-        backend=CRYPTO_BACKEND,
-    )
-    return hkdf.derive(key)
+    from .crypto_adapter import hap_hkdf as hkdf_func
+    return hkdf_func(key, salt, info, HAP_CRYPTO.HKDF_KEYLEN)
 
 
 class HAPCrypto:

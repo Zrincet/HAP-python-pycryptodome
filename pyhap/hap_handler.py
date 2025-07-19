@@ -10,10 +10,8 @@ from urllib.parse import ParseResult, parse_qs, urlparse
 import uuid
 
 import async_timeout
-from chacha20poly1305_reuseable import ChaCha20Poly1305Reusable as ChaCha20Poly1305
-from cryptography.exceptions import InvalidSignature, InvalidTag
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.asymmetric import ed25519, x25519
+from .chacha20poly1305_adapter import ChaCha20Poly1305Reusable as ChaCha20Poly1305
+from .crypto_adapter import InvalidSignature, InvalidTag, serialization, ed25519, x25519
 import h11
 
 from pyhap import tlv

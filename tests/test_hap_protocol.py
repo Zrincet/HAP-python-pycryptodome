@@ -3,7 +3,7 @@ import asyncio
 import time
 from unittest.mock import MagicMock, Mock, patch
 
-from cryptography.exceptions import InvalidTag
+from pyhap.crypto_adapter import InvalidTag
 import pytest
 
 from pyhap import hap_handler, hap_protocol

@@ -7,7 +7,7 @@ import logging
 import time
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
 
-from cryptography.exceptions import InvalidTag
+from .crypto_adapter import InvalidTag
 import h11
 
 from pyhap.accessory import get_topic

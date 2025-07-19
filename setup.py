@@ -3,10 +3,10 @@ from setuptools import setup
 
 import pyhap.const as pyhap_const
 
-NAME = "HAP-python"
+NAME = "HAP-python-pycryptodome"
 DESCRIPTION = "HomeKit Accessory Protocol implementation in python"
-URL = "https://github.com/ikalchev/{}".format(NAME)
-AUTHOR = "Ivan Kalchev"
+URL = "https://github.com/Zrincet/HAP-python-pycryptodome"
+AUTHOR = "Zrincet"
 
 
 PROJECT_URLS = {
@@ -24,8 +24,8 @@ with open("README.md", "r", encoding="utf-8") as f:
 
 REQUIRES = [
     "async_timeout",
-    "cryptography",
-    "chacha20poly1305-reuseable",
+    "pycryptodome",
+    "tlslite-ng>=0.8.2",
     "orjson>=3.7.2",
     "zeroconf>=0.36.2",
     "h11",

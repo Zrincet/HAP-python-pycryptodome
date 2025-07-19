@@ -5,7 +5,7 @@ import tempfile
 from unittest.mock import MagicMock, patch
 from uuid import uuid1
 
-from cryptography.hazmat.primitives import serialization
+from pyhap.crypto_adapter import serialization
 import pytest
 from zeroconf import InterfaceChoice
 
