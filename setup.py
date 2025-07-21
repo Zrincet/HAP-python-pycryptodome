@@ -24,9 +24,9 @@ with open("README.md", "r", encoding="utf-8") as f:
 
 REQUIRES = [
     "async_timeout",
-    "pycryptodome=3.23.0",
-    "tlslite-ng=0.8.2",
-    "zeroconf=0.36.2",
+    "pycryptodome==3.23.0",
+    "tlslite-ng==0.8.2",
+    "zeroconf==0.36.2",
     "h11",
 ]
 
