@@ -1,7 +1,6 @@
 base36
 pycryptodome
 tlslite-ng
-orjson
 pyqrcode
 h11
 zeroconf

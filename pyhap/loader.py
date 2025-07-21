@@ -9,7 +9,7 @@ json file).
 """
 import logging
 
-import orjson
+from pyhap.json_adapter import loads
 
 from pyhap import CHARACTERISTICS_FILE, SERVICES_FILE
 from pyhap.characteristic import Characteristic
@@ -35,7 +35,7 @@ class Loader:
     def _read_file(path):
         """Read file and return a dict."""
         with open(path, "r", encoding="utf8") as file:
-            return orjson.loads(file.read())  # pylint: disable=no-member
+            return loads(file.read())
 
     def get_char(self, name):
         """Return new Characteristic object."""

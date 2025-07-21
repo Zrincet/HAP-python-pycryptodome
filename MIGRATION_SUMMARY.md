@@ -7,8 +7,8 @@
 ## 主要更改
 
 ### 1. 依赖替换
-- **原依赖**: `cryptography`
-- **新依赖**: `pycryptodome` + `tlslite-ng`
+- **原依赖**: `cryptography`, `orjson`
+- **新依赖**: `pycryptodome` + `tlslite-ng` + 标准库 `json`
 - **ChaCha20Poly1305**: 从 `chacha20poly1305_reuseable` 替换为基于 `pycryptodome` 的自定义实现
 
 ### 2. 新增文件
@@ -25,14 +25,26 @@
 - 兼容原有的 `chacha20poly1305_reuseable` API
 - 支持 AAD (Additional Authenticated Data)
 
+#### `/pyhap/json_adapter.py`
+- 基于标准库 `json` 的 orjson 兼容层
+- 提供 `loads()`, `dumps()`, `OPT_SORT_KEYS` 等兼容 API
+- 输出格式与 orjson 保持一致（返回 bytes）
+
 ### 3. 修改的文件
 
 #### 核心模块
+- `pyhap/loader.py`: 替换 orjson.loads 为 json_adapter.loads
+- `pyhap/util.py`: 替换所有 orjson 调用为 json_adapter 函数
 - `pyhap/hap_crypto.py`: 更新导入和 HKDF 实现
 - `pyhap/hap_handler.py`: 替换加密库导入
 - `pyhap/hap_protocol.py`: 替换异常导入
 - `pyhap/encoder.py`: 替换序列化和 Ed25519 导入
 - `pyhap/state.py`: 替换 Ed25519 导入
+
+#### 依赖文件
+- `requirements.txt`: 移除 orjson 依赖
+- `requirements_all.txt`: 移除 orjson 依赖
+- `setup.py`: 从 REQUIRES 中移除 orjson
 
 #### 测试文件
 - `tests/test_state.py`
@@ -71,8 +83,24 @@
    - 密钥生成: ✓
    - 序列化/反序列化: ✓
 
-### 🔧 需要进一步调试的功能
-- **HAP 协议级加密**: HAPCrypto 的多实例通信有兼容性问题，可能需要进一步调整 ChaCha20Poly1305 的实现细节。
+5. **HAP JSON 序列化**
+   - orjson → json 转换: ✓
+   - to_hap_json() 函数: ✓
+   - to_sorted_hap_json() 函数: ✓
+   - from_hap_json() 函数: ✓
+   - 兼容 bytes 输出格式: ✓
+
+### ✅ 已解决的关键问题
+- **Ed25519 签名验证失败**: 修复了 HAP 配对过程中的 `InvalidSignature: Signature verification failed` 错误
+- **密钥导入兼容性**: 解决了 Ed25519 密钥从字节重建时的 DER 格式问题
+- **HAP 协议级加密**: 完全兼容的 ChaCha20Poly1305 实现
+
+### 🔧 最新状态 (2025-07-20)
+- ✅ **所有核心加密功能正常工作**
+- ✅ **HAP 配对过程完全兼容**  
+- ✅ **Ed25519 签名/验证使用正确的种子值**
+- ✅ **X25519 密钥交换完全兼容**
+- ✅ **ChaCha20Poly1305 加密/解密正常**
 
 ## 技术细节
 
@@ -105,17 +133,27 @@
 - 保持了所有原有的公共 API
 - 异常类型与原有库兼容
 - 函数签名与原有实现一致
+- JSON 输出格式完全兼容（bytes 类型）
 
 ### 依赖变更
 ```python
 # 原依赖
 cryptography
+orjson
 chacha20poly1305_reuseable
 
 # 新依赖  
 pycryptodome
 tlslite-ng
+# 标准库 json (无需额外安装)
+
+# 移除的历史依赖
+# PyNaCl (项目历史上使用过，但当前未使用)
 ```
+
+## 重要说明
+
+**PyNaCl 移除**: 经过检查，项目当前代码中没有使用 PyNaCl，虽然历史上曾经使用过（见 CHANGELOG.md #355），但后来切换到了 cryptography，现在已被 pycryptodome 替换。因此从依赖中移除 PyNaCl。
 
 ## 使用说明
 
@@ -133,9 +171,23 @@ from pyhap.accessory_driver import AccessoryDriver
 
 此次迁移成功实现了以下目标：
 1. ✅ 完全移除了对 `cryptography` 库的依赖
-2. ✅ 使用 `pycryptodome` 和 `tlslite-ng` 提供等效功能
-3. ✅ 保持了 API 兼容性
-4. ✅ 核心加密功能正常工作
-5. ✅ HAP 协议基础功能正常工作
+2. ✅ 完全移除了对 `orjson` 库的依赖  
+3. ✅ 使用 `pycryptodome`、`tlslite-ng` 和标准库 `json` 提供等效功能
+4. ✅ 保持了 API 兼容性
+5. ✅ 核心加密功能正常工作
+6. ✅ HAP 协议基础功能正常工作
+7. ✅ **解决了 HAP 配对过程中的签名验证错误**
+8. ✅ **JSON 序列化完全兼容原有行为**
 
-项目现在可以在不使用 `cryptography` 库的环境中正常运行。
+**重要修复**: 
+- 解决了原始错误 `InvalidSignature: Signature verification failed`
+- 成功替换 orjson 为标准库 json，保持完全兼容性
+
+项目现在可以在不使用 `cryptography` 和 `orjson` 库的环境中正常运行。
+
+## 下一步计划
+
+依赖替换工作已基本完成：
+- ✅ `cryptography` → `pycryptodome` + `tlslite-ng`
+- ✅ `orjson` → 标准库 `json`
+- [ ] 检查其他可选依赖的替换需求（如有必要）

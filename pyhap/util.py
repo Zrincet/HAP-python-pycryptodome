@@ -7,7 +7,7 @@ from typing import Awaitable, Set
 from uuid import UUID
 
 import async_timeout
-import orjson
+from pyhap.json_adapter import dumps, loads, OPT_SORT_KEYS
 
 from .const import BASE_UUID
 
@@ -165,19 +165,17 @@ def hap_type_to_uuid(hap_type):
 
 def to_hap_json(dump_obj):
     """Convert an object to HAP json."""
-    return orjson.dumps(dump_obj)  # pylint: disable=no-member
+    return dumps(dump_obj)
 
 
 def to_sorted_hap_json(dump_obj):
     """Convert an object to sorted HAP json."""
-    return orjson.dumps(  # pylint: disable=no-member
-        dump_obj, option=orjson.OPT_SORT_KEYS  # pylint: disable=no-member
-    )
+    return dumps(dump_obj, option=OPT_SORT_KEYS)
 
 
 def from_hap_json(json_str):
     """Convert json to an object."""
-    return orjson.loads(json_str)  # pylint: disable=no-member
+    return loads(json_str)
 
 
 def async_create_background_task(func: Awaitable) -> asyncio.Task:
