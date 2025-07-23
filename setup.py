@@ -28,6 +28,7 @@ REQUIRES = [
     "tlslite-ng==0.8.2",
     "zeroconf==0.36.2",
     "h11",
+    "base36"
 ]
 
 

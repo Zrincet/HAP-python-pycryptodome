@@ -18,6 +18,11 @@ from .const import (
 from .iid_manager import IIDManager
 from .service import Service
 
+try:
+    import base36
+except ImportError:
+    base36 = None
+
 if SUPPORT_QR_CODE:
     import base36
     from pyqrcode import QRCode
